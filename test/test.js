@@ -7,9 +7,10 @@ describe("Pie", function () {
     const pie = await Pie.deploy();
     await pie.deployed();
 
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 50; i++) {
       let d = await pie.computeDigit();
-      //console.log(d);
+      let r = await ethers.provider.getTransactionReceipt(d.hash)
+      //console.log(r.gasUsed.toString());
     }
   });
 });

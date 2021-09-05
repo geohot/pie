@@ -4,6 +4,7 @@ def continued_fraction(a, b, base=10):
   """Generate digits of continued fraction a(0)+b(1)/(a(1)+b(2)/(...)."""
   (p0, q0), (p1, q1) = (a(0), 1), (a(1) * a(0) + b(1), a(1))
   k = 1
+  print(p0, q0, p1, q1, k)
   while True:
     #print(p0, q0, p1, q1)
 
