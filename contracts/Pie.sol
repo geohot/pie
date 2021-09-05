@@ -31,18 +31,15 @@ contract Pie {
         console.log(d1);
         return d1;
       } else {
-        if ((k%2) == 1) {
-          uint256 y = k * k;
-          k += 1;
-          uint256 x = 2 * k - 1;
+        uint256 x = k * k;
+        k += 1;
+        uint256 y = 2 * k - 1;
 
-          p0 = x * p1 + y * p0;
-          q0 = x * q1 + y * q0;
+        // bignumber math
+        if ((k%2) == 0) {
+          p0 = x * p0 + y * p1;
+          q0 = x * q0 + y * q1;
         } else {
-          uint256 x = k * k;
-          k += 1;
-          uint256 y = 2 * k - 1;
-
           p1 = x * p1 + y * p0;
           q1 = x * q1 + y * q0;
         }
