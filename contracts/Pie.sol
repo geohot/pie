@@ -36,7 +36,7 @@ contract Pie {
         // polarity here doesn't matter
         p0 = 10 * r0;
         p1 = 10 * r1;
-        console.log(d1);
+//        console.log(d1);
         return d1;
       } else {
         uint256 x = k * k;
