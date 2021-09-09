@@ -9,7 +9,7 @@ describe("Pie", function () {
 
     for (var i = 0; i < 50; i++) {
       let d = await pie.computeDigit();
-      let r = await ethers.provider.getTransactionReceipt(d.hash);
+      let r = await ethers.provider.getTransactionReceipt(d.hash)
       //console.log(r.gasUsed.toString());
     }
   });
