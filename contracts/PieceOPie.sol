@@ -12,6 +12,7 @@ contract PieceOPie is ERC721Enumerable, ReentrancyGuard {
     Pie private pie;
 
     constructor() ERC721("PieceOPie", "PIE") {
+        // TODO: Make sure pie can't be incremented externally?
         pie = new Pie();
     }
 

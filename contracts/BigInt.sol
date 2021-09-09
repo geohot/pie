@@ -15,7 +15,7 @@ library BigInt {
     r.limbs[0] = x;
   }
   
-  function lt(bigint memory _a, bigint memory _b) internal view returns (bool) {
+  function lt(bigint memory _a, bigint memory _b) internal pure returns (bool) {
     uint limbs = max(_a.limbs.length, _b.limbs.length);
     uint i = limbs-1;
     while (true) {
@@ -51,7 +51,7 @@ library BigInt {
     }
   }
 
-  function sub(bigint memory _a, bigint memory _b) internal view returns (bigint memory r) {
+  function sub(bigint memory _a, bigint memory _b) internal pure returns (bigint memory r) {
       r.limbs = new uint[](max(_a.limbs.length, _b.limbs.length));
       uint borrow = 0;
       for (uint i = 0; i < r.limbs.length; ++i) {
