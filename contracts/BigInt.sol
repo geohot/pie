@@ -1,11 +1,12 @@
 // https://docs.soliditylang.org/en/v0.8.0/contracts.html
 // https://github.com/kokke/tiny-bignum-c
+import "hardhat/console.sol";
+
+struct bigint {
+  uint[] limbs;
+}
 
 library BigInt {
-  struct bigint {
-    uint[] limbs;
-  }
-
   function fromUint(uint x) internal pure returns (bigint memory r) {
     r.limbs = new uint[](1);
     r.limbs[0] = x;
@@ -13,18 +14,21 @@ library BigInt {
   
   function lt(bigint memory _a, bigint memory _b) internal pure returns (bool) {
     uint limbs = max(_a.limbs.length, _b.limbs.length);
-    for (uint i = limbs-1; i >= 0; --i) {
+    uint i = limbs-1;
+    while (true) {
       uint a = limb(_a, i);
       uint b = limb(_b, i);
       if (a < b) return true;
       if (a > b) return false;
+      if (i == 0) break;
+      --i;
     }
     return false;
   }
 
   function mul(bigint memory _a, uint256 b) internal pure returns (bigint memory r) {
     require(b <= 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
-    r.limbs = new uint[](_a.limbs.length+1);
+    r.limbs = new uint[](_a.limbs.length);
     uint carry = 0;
     for (uint i = 0; i < r.limbs.length; ++i) {
       uint a = limb(_a, i);
@@ -51,7 +55,7 @@ library BigInt {
       uint a = limb(_a, i);
       uint b = limb(_b, i);
       r.limbs[i] = a - b + borrow;
-      if (a - b > a)
+      if ((a - b) > a)
         borrow = 1;
       else
         borrow = 0;

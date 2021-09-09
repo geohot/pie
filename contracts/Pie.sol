@@ -2,20 +2,23 @@
 pragma solidity >=0.8.0;
 
 import "hardhat/console.sol";
+import "./BigInt.sol";
 
 contract Pie {
+  using BigInt for bigint;
+
   uint256 k;
   // TODO: replace with bigints
-  uint256 p0;
-  uint256 q0;
-  uint256 p1;
-  uint256 q1;
+  bigint p0;
+  bigint q0;
+  bigint p1;
+  bigint q1;
 
   constructor() {
-    p0 = 0;
-    q0 = 1;
-    p1 = 4;
-    q1 = 1;
+    p0 = BigInt.fromUint(0);
+    q0 = BigInt.fromUint(1);
+    p1 = BigInt.fromUint(4);
+    q1 = BigInt.fromUint(1);
     k = 1;
   }
   
@@ -27,15 +30,15 @@ contract Pie {
       uint256 d0 = 0;
       uint256 d1 = 0;
       // these need to be bigints
-      uint256 r0 = p0;
-      uint256 r1 = p1;
-      while (r0 > q0) { r0 -= q0; d0 += 1; }
-      while (r1 > q1) { r1 -= q1; d1 += 1; }
+      bigint memory r0 = p0;
+      bigint memory r1 = p1;
+      while (q0.lt(r0)) { r0 = r0.sub(q0); d0 += 1; }
+      while (q1.lt(r1)) { r1 = r1.sub(q1); d1 += 1; }
 
       if (d0 == d1) {
         // polarity here doesn't matter
-        p0 = 10 * r0;
-        p1 = 10 * r1;
+        p0 = r0.mul(10);
+        p1 = r1.mul(10);
         console.log(d1);
         return d1;
       } else {
@@ -45,15 +48,11 @@ contract Pie {
 
         // bignumber math
         if ((k%2) == 0) {
-          p0 = x * p0;
-          p0 += y * p1;
-          q0 = x * q0;
-          q0 += y * q1;
+          p0 = p0.mul(x).add(p1.mul(y));
+          q0 = q0.mul(x).add(q1.mul(y));
         } else {
-          p1 = x * p1;
-          p1 += y * p0;
-          q1 = x * q1;
-          q1 += y * q0;
+          p1 = p1.mul(x).add(p0.mul(y));
+          q1 = q1.mul(x).add(q0.mul(y));
         }
       }
 
