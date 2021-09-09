@@ -52,19 +52,19 @@ library BigInt {
   }
 
   function sub(bigint memory _a, bigint memory _b) internal pure returns (bigint memory r) {
-      r.limbs = new uint[](max(_a.limbs.length, _b.limbs.length));
-      uint borrow = 0;
-      for (uint i = 0; i < r.limbs.length; ++i) {
-        uint a = limb(_a, i);
-        uint b = limb(_b, i) + borrow;
-        if (a < b) {
-          r.limbs[i] = MAX_INT_TYPE - (b - a) + 1;
-          borrow = 1;
-        } else {
-          r.limbs[i] = a - b;
-          borrow = 0;
-      }
-      // sub can't require a new limb
+    r.limbs = new uint[](max(_a.limbs.length, _b.limbs.length));
+    uint borrow = 0;
+    for (uint i = 0; i < r.limbs.length; ++i) {
+      uint a = limb(_a, i);
+      uint b = limb(_b, i) + borrow;
+      if (a < b) {
+        r.limbs[i] = MAX_INT_TYPE - (b - a) + 1;
+        borrow = 1;
+      } else {
+        r.limbs[i] = a - b;
+        borrow = 0;
+    }
+    // sub can't require a new limb
     }
   }
 
