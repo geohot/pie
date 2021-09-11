@@ -6,7 +6,10 @@ struct bigint {
   uint[] limbs;
 }
 
+uint256 constant MAX_INT_TYPE = type(uint256).max;
+
 library BigInt {
+
   function fromUint(uint x) internal pure returns (bigint memory r) {
     r.limbs = new uint[](1);
     r.limbs[0] = x;
@@ -53,14 +56,16 @@ library BigInt {
     uint borrow = 0;
     for (uint i = 0; i < r.limbs.length; ++i) {
       uint a = limb(_a, i);
-      uint b = limb(_b, i);
-      r.limbs[i] = a - b + borrow;
-      if ((a - b) > a)
+      uint b = limb(_b, i) + borrow;
+      if (a < b) {
+        r.limbs[i] = MAX_INT_TYPE - (b - a) + 1;
         borrow = 1;
-      else
+      } else {
+        r.limbs[i] = a - b;
         borrow = 0;
     }
     // sub can't require a new limb
+    }
   }
 
   function add(bigint memory _a, bigint memory _b) internal pure returns (bigint memory r) {
@@ -68,12 +73,15 @@ library BigInt {
     uint carry = 0;
     for (uint i = 0; i < r.limbs.length; ++i) {
       uint a = limb(_a, i);
-      uint b = limb(_b, i);
-      r.limbs[i] = a + b + carry;
-      if (a + b < a || (a + b == 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff && carry > 0))
+      uint b = limb(_b, i) + carry;
+      if (a > MAX_INT_TYPE - b || (a + b == 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff && carry > 0)) {
+        r.limbs[i] = a - (MAX_INT_TYPE - b) - 1;
         carry = 1;
-      else
+      } else {
+        r.limbs[i] = a + b;
         carry = 0;
+      }
+
     }
     if (carry > 0) {
       uint[] memory newLimbs = new uint[](r.limbs.length + 1);
